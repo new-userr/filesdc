@@ -1,29 +1,31 @@
-%dc_expt_6_study_of__theory_of_qask
 clc;
 clear all;
 close all;
-choice = input('Enter 1:BPSK, 2:QPSK, 3:MSK, 4:16-QASK, 5:QPR, 6:MPSK, 7:ortho.MFSK-');
-SNR = input('Enter Eb/eta ratio i.e. bit energy to twice of PSD-')
-if choice>4,
-    M=input('Enter no. of symbols in integer power of 2-');
-end
-if choice<4,
-    pe=0.5*erfc(sqrt(SNR));
-end
-if choice==4,
-    pe=0.5*erfc(sqrt(pi*pi*SNR/16));
-end
-if choice==6,
-    N=log2(M);
-    pe=erfc(sqrt(N*SNR)*sin(pi/M));
-end
-if choice==7,
-    N=log2(M);
-    pe=((M-1)/2)*erfc(sqrt(N*SNR/2));
-end
-Error_Probability=pe
 
+% Prompt the user to select a modulation scheme
+choice = input('Enter 1 for BPSK, 2 for QPSK, 3 for MSK, 4 for 16-QAM, 5 for MPSK, 6 for MFSK: ');
 
-% in cmd
-%1) type - 4
-%2) type - 25
+% Define constants
+M = 16;
+SNR = 25;
+
+% Compute error probability based on modulation choice
+if choice == 1 || choice == 2 || choice == 3
+    % BPSK, QPSK, MSK
+    pe = 0.5 * erfc(sqrt(SNR));
+elseif choice == 4
+    % 16-QAM
+    pe = 2 * erfc(sqrt(0.4 * SNR));
+elseif choice == 5
+    % MPSK
+    pe = 0.5 * erfc(sqrt(pi^2 * SNR / 16));
+elseif choice == 6
+    % MFSK
+    N = log2(M);
+    pe = erfc(sqrt(N * SNR) * sin(pi / M));
+else
+    error('Invalid choice. Please enter a valid option (1-6).');
+end
+
+% Display error probability
+Error_Probability = pe
